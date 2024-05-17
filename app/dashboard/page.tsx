@@ -1,11 +1,17 @@
+"use client"
+import { redirect } from 'next/navigation';
 import React from 'react'
+import { toast } from 'sonner';
 
 type Props = {}
 
-const page = (props: Props) => {
+const Dashboard = (props: Props) => {
+
   return (
-    <div>Dashboard</div>
-  )
+    <div className="min-h-screen h-full w-full px-8 flex flex-1 flex-grow max-w-screen">
+      Dashboard
+    </div>
+  );
 }
 
-export default page
+export default Dashboard;

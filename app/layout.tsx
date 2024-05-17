@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
+import { cn } from "@/lib/utils";
+import { sourceSans } from "@/fonts";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Nowted Notepad | Keep all your ideas in one place",
   description:
     "Nowted Notepad is your ultimate digital companion for organizing and capturing all your thoughts and ideas in one convenient place. With its intuitive interface and seamless syncing across devices, Nowted Notepad ensures that no idea is ever lost. Whether you're jotting down notes, drafting creative concepts, or outlining projects, Nowted Notepad provides the perfect platform to keep your inspiration flowing. Say goodbye to scattered thoughts and hello to streamlined productivity with Nowted Notepad",
-  icons: [],
 };
 
 export default function RootLayout({
@@ -17,8 +16,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className="h-full">
+      <head>
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+      </head>
+      <body className={cn("h-full antialiased font-sans bg-base", sourceSans.className)}>
+        <main className="min-h-screen">
+          <div className="flex-grow flex-1">{children}</div>
+        </main>
+        <Toaster position="top-right" richColors />
+      </body>
     </html>
   );
 }
