@@ -28,6 +28,10 @@ export const signInSchema = z.object({
     })
 })
 
-export const folderSchema = z.object({})
+export const folderSchema = z.object({
+  name: z.string().min(3, {
+    message: "Your folder name must be at least 3 characters long"
+  })
+})
 
 export const noteSchema = z.object({});
