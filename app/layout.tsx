@@ -3,6 +3,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { sourceSans } from "@/fonts";
 import { Toaster } from "@/components/ui/sonner";
+import Provider from "@/components/auth/Provider";
 
 export const metadata: Metadata = {
   title: "Nowted Notepad | Keep all your ideas in one place",
@@ -23,9 +24,11 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className={cn("h-full antialiased font-sans bg-base", sourceSans.className)}>
+      <body className={cn("h-full antialiased font-sans", sourceSans.className)}>
         <main className="min-h-screen">
+          <Provider>
           <div className="flex-grow flex-1">{children}</div>
+          </Provider>
         </main>
         <Toaster position="top-right" richColors />
       </body>

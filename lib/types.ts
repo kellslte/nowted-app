@@ -39,19 +39,20 @@ export type Authorization = {
 }
 
 export type User = {
-     sub: string;
+    id: string;
     name: string;
     email: string;
-    iat: number;
-    exp: number;
+}
+
+export type Credentials = {
+    email: string;
+    password: string;
 }
 
 export type Auth = {
-  user: User;
   notes: Notes;
   favourites: Favourites;
   trashed: Trashed;
   archived: Archived;
   recentNotes: RecentNotes;
-  token: string;
 };

@@ -16,62 +16,64 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
+import { Eye, EyeOff} from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { Icons } from '../icons';
 
 type Props = {}
 
 const SignUpForm = (props: Props) => {
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [inputType, setInputType] = useState<string>("password");
-  const [submitting, setSubmitting] = useState<boolean>(false);
-  const router = useRouter()
 
-    const form = useForm<z.infer<typeof signUpSchema>>({
-        resolver: zodResolver(signUpSchema),
-        defaultValues: {
-            name: '',
-            email: '',
-            password: ''
-        }
-    })
+  const formDetails = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
 
-    const formSubmitHandler = async (values: z.infer<typeof signUpSchema>) => {
-      try {
-        const res = await fetcher.post('/auth/sign-up', values)
-        const {success, message} = await res.data;
-        setSubmitting(true);
-
-        if(success){
-          setSubmitting(false);
+  const handleFormSubmission = async (data: z.infer<typeof signUpSchema>) => {
+    try {
+      setIsSubmitting(true);
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      const { success, message } = await response.json();
+      setTimeout(() => {
+        setIsSubmitting(false);
+        if (!success) {
+          toast.error(message);
+        } else {
           toast.success(message);
-          form.reset();
-          router.push('/sign-in')
         }
-      } catch (error: any) {
-        toast.error(error.message);
-        setSubmitting(false);
-      }
+      }, 3000);
+    } catch (error: any) {
+      toast.error(error.message);
     }
+  };
 
-      const toggleInputType = () => {
-        if (inputType === "password") setInputType("text");
-        else setInputType("password");
-      };
+  const changeInputType = () => {
+    setInputType(inputType === "password" ? "text" : "password");
+  };
 
   return (
-    <Form {...form}>
+    <Form {...formDetails}>
       <form
         method="post"
-        onSubmit={form.handleSubmit(formSubmitHandler)}
-        className="space-y-6"
+        className="space-y-4 w-[30rem]"
+        onSubmit={formDetails.handleSubmit(handleFormSubmission)}
       >
         <FormField
-          control={form.control}
+          control={formDetails.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base-text-alt">Name</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input {...field} type="text" placeholder="Enter your name" />
               </FormControl>
@@ -80,11 +82,11 @@ const SignUpForm = (props: Props) => {
           )}
         />
         <FormField
-          control={form.control}
+          control={formDetails.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base-text-alt">Email</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input {...field} type="email" placeholder="Enter your email" />
               </FormControl>
@@ -93,24 +95,28 @@ const SignUpForm = (props: Props) => {
           )}
         />
         <FormField
-          control={form.control}
+          control={formDetails.control}
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base-text-alt">Password</FormLabel>
+              <FormLabel>Password</FormLabel>
               <FormControl>
-                <div className="flex items-center">
+                <div className="flex itemsce-center">
                   <Input
                     {...field}
                     type={inputType}
                     placeholder="Enter your password"
                   />
                   <button
-                    onClick={toggleInputType}
-                    className="border-none cursor-pointer -ml-8"
                     type="button"
+                    onClick={changeInputType}
+                    className="-ml-6"
                   >
-                    {inputType === "password" ? <Eye /> : <EyeOff />}
+                    {inputType === "password" ? (
+                      <Eye className="h-4 w-4" />
+                    ) : (
+                      <EyeOff className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
               </FormControl>
@@ -118,19 +124,11 @@ const SignUpForm = (props: Props) => {
             </FormItem>
           )}
         />
-        <div className="flex items-center justify-center flex-col flex-1 flex-grow">
-          <Button
-            size={"lg"}
-            variant={"outline"}
-            type="submit"
-            className="mx-auto text-center"
-            disabled={submitting}
-          >
-            {
-              submitting && (
-                <LoaderCircle className="mr-2 h-4 w-4 animate-spin stroke-base-alt" />
-              )
-            }
+        <div className="w-full flex items-center justify-center my-2">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting && (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
             Sign Up
           </Button>
         </div>
