@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import SearchInput from "./search";
+import Recents from "./sections/recents";
+import Folders from "./sections/folders";
+import More from "./sections/more";
 
 type Props = {};
 
@@ -46,7 +49,11 @@ const Sidebar = (props: Props) => {
           </span>
         </Link>
       )}
-      <div></div>
+      <div className="flex flex-col items-center w-full gap-y-[1.875rem] py-[1.875rem]">
+        <Recents />
+        <Folders />
+        <More />
+      </div>
     </div>
   );
 };
